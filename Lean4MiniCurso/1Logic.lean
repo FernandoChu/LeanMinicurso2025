@@ -238,7 +238,7 @@ example (p : Prop) (hp : ¬ ¬ p) : p := by
 
 /-!
 ## Ejercicios
-Trate de resolver los siguientes ejercicios usando tácticas o definiciones explícitas.
+Trate de probar los siguientes ejercicios usando tácticas o definiciones explícitas.
 -/
 
 example (p q r : Prop) : (p → q) → (p → r) → p → q := sorry
