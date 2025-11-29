@@ -90,7 +90,7 @@ Podemos encontrar nombres de definiciones y lemas ("API") de varias maneras.
 En la página web https://loogle.lean-lang.org/ se pueden buscar definiciones y lemmas.
 También se pueden realizar búsquedas con el siguiente comando:
 -/
-#loogle Real.sin
+-- #loogle Real.sin
 
 /-
 ### Manera 2: `exact?` y `apply?`
@@ -128,7 +128,7 @@ Tácticas generales:
 
 /- Una sucesión de números reales es una función `ℕ → ℝ`. -/
 example : ℕ → ℝ :=
-  fun n ↦ 5
+  fun n ↦ n^2
 
 /--
 Una sucesión `a : ℕ → ℝ` converge a `x : ℝ` si para todo `ε > 0`,
@@ -137,8 +137,10 @@ existe un `n₀ : ℕ` tal que para todo `n ≥ n₀`, `|x - a n| ≤ ε`.
 def ConvergesTo (a : ℕ → ℝ) (x : ℝ) : Prop :=
   ∀ ε > 0, ∃ (n₀ : ℕ), ∀ n ≥ n₀, |x - a n| ≤ ε
 
+notation3 "Lim " a " ⇝ " x => ConvergesTo a x
+
 /-- Una sucesión constante converge a su valor constante. -/
-lemma ConvergesTo.const (a : ℝ) : ConvergesTo (fun _ ↦ a) a := by
+lemma ConvergesTo.const (c : ℝ) : Lim (fun _ ↦ c) ⇝ c := by
   rw [ConvergesTo]
   intro ε hε
   use 0
@@ -150,8 +152,8 @@ Si `a` converge a `x` y `b` converge a `y` entonces
 `a + b` converge a `x + y`.
 -/
 lemma ConvergesTo.add {a b : ℕ → ℝ} {x y : ℝ}
-    (ha : ConvergesTo a x) (hb : ConvergesTo b y) :
-    ConvergesTo (a + b) (x + y) := by
+    (ha : Lim a ⇝ x) (hb : Lim b ⇝ y) :
+    Lim (a + b) ⇝ (x + y) := by
   intro ε hε
   obtain ⟨n₀, hn₀⟩ := ha (ε / 2) (by linarith)
   obtain ⟨m₀, hm₀⟩ := hb (ε / 2) (by linarith)
@@ -171,7 +173,7 @@ lemma ConvergesTo.add {a b : ℕ → ℝ} {x y : ℝ}
                       _ = ε := by simp
 
 /-- La función 1/n converge hacia 0. -/
-example : ConvergesTo (fun n ↦ 1 / n) 0 := by
+example : Lim (fun n ↦ 1 / n) ⇝ 0 := by
   intro ε hε
   use ⌈1 / ε⌉₊
   intro n hn
@@ -186,7 +188,7 @@ example : ConvergesTo (fun n ↦ 1 / n) 0 := by
 
 /-!
 ## Ejercicios
-Trate de probar lossiguientes ejercicios.
+Pruebe los siguientes resultados.
 -/
 
 /--
@@ -219,7 +221,7 @@ lemma Bounded.of_le {a : ℕ → ℝ} (M : ℝ) (n₀ : ℕ) (h : ∀ n ≥ n₀
 
 /-- Toda sequencia convergente está acotada. -/
 -- Sugerencia: use el resultado previo.
-lemma ConvergesTo.bounded {a : ℕ → ℝ} {x : ℝ} (h : ConvergesTo a x) :
+lemma ConvergesTo.bounded {a : ℕ → ℝ} {x : ℝ} (h : Lim a ⇝ x) :
     Bounded a := by
   obtain ⟨n₀, hn₀⟩ := h 1 (by linarith)
   apply Bounded.of_le (|x| + 1) n₀
@@ -234,9 +236,8 @@ lemma ConvergesTo.bounded {a : ℕ → ℝ} {x : ℝ} (h : ConvergesTo a x) :
 
 /-- Si `a` converge a `x` y `b` converge a `y`, entonces `a * b` converge a `x * y`. -/
 -- Sugerencia: use el resultado previo.
-lemma ConvergesTo.mul {a b : ℕ → ℝ} {x y : ℝ} (ha : ConvergesTo a x)
-    (hb : ConvergesTo b y) :
-    ConvergesTo (a * b) (x * y) := by
+lemma ConvergesTo.mul {a b : ℕ → ℝ} {x y : ℝ} (ha : Lim a ⇝ x) (hb : Lim b ⇝ y) :
+    Lim (a * b) ⇝ (x * y) := by
   intro ε hε
   obtain ⟨M, hM⟩ := ha.bounded
   let C : ℝ := |M| + |y| + 1
@@ -278,18 +279,18 @@ lemma Bounded.iff_bounded_abs {a : ℕ → ℝ} :
   sorry
 
 /-- Si `a` converge a `x`, entonces `- (a i)` converge a `-x`. -/
-lemma ConvergesTo.neg {a : ℕ → ℝ} {x : ℝ} (ha : ConvergesTo a x) :
+lemma ConvergesTo.neg {a : ℕ → ℝ} {x : ℝ} (ha : Lim a ⇝ x) :
     ConvergesTo (-a) (-x) :=
   sorry
 
 /-- Una sucesión `a` converge a cero si y solo si `|a i|` converge a cero. -/
 lemma ConvergesTo.zero_iff_convergesTo_abs_zero (a : ℕ → ℝ) :
-    ConvergesTo a 0 ↔ ConvergesTo (fun n ↦ |a n|) 0 := by
+    (Lim a ⇝ 0) ↔ (Lim (fun n ↦ |a n|) ⇝ 0) := by
   sorry
 
 /-- Una sucesión `a` converge a `x` si y solo si `i ↦ x - a i` converge a `0`. -/
 lemma ConvergesTo.iff_convergesTo_sub_zero (a : ℕ → ℝ) (x : ℝ) :
-    ConvergesTo a x ↔ ConvergesTo (fun n ↦ x - a n) 0 := by
+    (Lim a ⇝ x) ↔ (Lim (fun n ↦ x - a n) ⇝ 0) := by
   sorry
 
 /--
@@ -297,6 +298,6 @@ Sean `a`, `b` y `c` sucesiones con `a n ≤ b n ≤ c n`. Si `a` y `c` convergen
 entonces `b` también converge a `x`. -/
 lemma ConvergesTo.sandwich (a b c : ℕ → ℝ) {x : ℝ}
     (hab : ∀ n, a n ≤ b n) (hbc : ∀ n, b n ≤ c n)
-    (ha : ConvergesTo a x) (hc : ConvergesTo c x) :
-    ConvergesTo b x := by
+    (ha : Lim a ⇝ x) (hc : Lim c ⇝ x) :
+    Lim b ⇝ x := by
   sorry

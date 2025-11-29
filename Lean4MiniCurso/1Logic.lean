@@ -224,7 +224,7 @@ example (p q : Prop) (hp : p) (np : ¬ p) : q := by
   exact hp
 
 /-
-Nota: las tácticas `contrapose` y `push_neg` tabién son útiles.
+Nota: las tácticas `contrapose` y `push_neg` también son útiles.
 -/
 example (p q : Prop) (h : ¬ p → ¬ q) : q → p := by
   contrapose
@@ -238,7 +238,7 @@ example (p : Prop) (hp : ¬ ¬ p) : p := by
 
 /-!
 ## Ejercicios
-Trate de probar los siguientes ejercicios usando tácticas o definiciones explícitas.
+Pruebe los siguientes ejercicios usando tácticas o definiciones explícitas.
 -/
 
 example (p q r : Prop) : (p → q) → (p → r) → p → q := sorry
