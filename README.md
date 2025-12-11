@@ -14,10 +14,10 @@ Luego de instalar Lean, para utilizar el material de este curso haga click en el
 
 Aparecerá una caja para ingresar texto, y ahí pegue el link de este repositiorio
 ```
-https://github.com/formal-methods-nl/uu-summerschool-2025
+https://github.com/FernandoChu/LeanMinicurso2025
 ```
 
-Tras seleccionar un lugar de instalación (No seleccione en Onedrive!), el repositorio se descargará e instalará en su computadora. Esto podrá durar unos minutos.
+Tras seleccionar un lugar de instalación (No seleccione en Onedrive!), el repositorio se descargará e instalará en su computadora. Esto podrá durar unos minutos. Nota: Posiblemente el instalador preguntará si desean instalar Git y Elan, instale ambos programas.
 
 El material del minicurso se puede encontrar en el folder `Lean4MiniCurso`.
 
