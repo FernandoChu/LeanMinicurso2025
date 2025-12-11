@@ -45,20 +45,81 @@ def identity (A : Type) : A → A := fun x ↦ x
 /-
 ## Tipos inductivos
 Los tipos inductivos son tipos libremente generados por *constructores*.
-El tipo inductivo más famoso es el tipo ℕ.
+Esto es análogo al grupo libre generado por ciertos elementos.
 -/
 
 namespace TiposInductivos
 
+/-
+### El tipo de los naturales
+-/
 inductive Nat where
   | zero : Nat
   | succ : Nat → Nat
 
+def plus : Nat → Nat → Nat :=
+  fun n m ↦ match n with
+  | .zero => m
+  | .succ n => .succ (plus n m)
+
+def ind (P : Nat → Prop) (h0 : P .zero) (hd : ∀ n : Nat, P n → P (.succ n)) :
+  ∀ n, P n :=
+  fun n ↦ match n with
+  | .zero => h0
+  | .succ n => hd n (ind P h0 hd n)
+
+#eval plus (.succ .zero) .zero
+
+example (n : Nat) : plus n .zero = n := by
+  induction n with
+  | zero => rw [plus]
+  | succ n h =>
+      rw [plus]
+      rw [h]
+
+/-
+### Productos
+-/
 inductive Prod (A B : Type) where
   | pair (a : A) (b : B) : Prod A B
 
 def flip : Prod ℕ ℕ → Prod ℕ ℕ :=
+  fun p ↦ match p with
+  | .pair a b => .pair b a
+
+/- Debería ser claro que todas las estructuras siguen este patrón. -/
 
 
+/-
+### El tipo de igualdades
+-/
 inductive Eq {α : Type} : α → α → Prop where
   | refl : (a : α) → Eq a a
+
+/-
+Esta definición no debería ser sorpresa: esta definiendo la relación de
+igualdad como la "mínima relación reflexiva"!
+-/
+
+/- Substituir propiedades es dado por recursión! -/
+def subst (a b : ℕ) (h : Eq a b) (P : ℕ → Prop) (ha : P a) : P b :=
+  match h with
+  | .refl _ => ha
+
+/- La táctica `rw` solo está aplicando esta función subst. -/
+example (a b c : ℕ) (h1 : Eq a b) (h2 : Eq a c) : Eq b c :=
+  subst a b h1 (fun x ↦ Eq x c) h2
+
+/-!
+## Ejercicios
+Defina otros tipos inductivos que conoce (primero tiene que *re*conocerlos!),
+y pruebe resultados básicos de estos.
+Algunas ideas:
+- El tipo de listas de elementos de un tipo `X`
+- El tipo de árboles binarios de un tipo `X`
+- La desigualdad de los naturales.
+- Curioso: Fijemos `n : ℕ`. El tipo de números naturales multiplos de `n`
+  se puede definir también como un tipo inductivo.
+- Curioso: Los enteros también pueden definirse como un tipo inductivo.
+  Sugerencia: Revise la definición de Mathlib `#check ℤ`.
+-/

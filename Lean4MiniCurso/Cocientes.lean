@@ -45,6 +45,8 @@ def modSetoid (n : ℤ) : Setoid ℤ where
 abbrev Mod (n : ℤ) : Type :=
   Quotient (modSetoid n)
 
+abbrev ℤ2 : Type := Mod 2
+
 /-- An addition on the integers modulo `n`. -/
 instance (n : ℤ) : Add (Mod n) where
   add := by
@@ -60,5 +62,9 @@ instance (n : ℤ) : Add (Mod n) where
     apply Quotient.sound
     use k + m
     linarith
+
+def suma : Quotient (modSetoid 2) := ⟦1⟧ + ⟦1⟧
+
+#eval suma
 
 end Quotients
