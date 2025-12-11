@@ -121,5 +121,5 @@ Algunas ideas:
 - Curioso: Fijemos `n : ℕ`. El tipo de números naturales multiplos de `n`
   se puede definir también como un tipo inductivo.
 - Curioso: Los enteros también pueden definirse como un tipo inductivo.
-  Sugerencia: Revise la definición de Mathlib `#check ℤ`.
+  Solución: Revise la definición de Mathlib `#check ℤ`.
 -/

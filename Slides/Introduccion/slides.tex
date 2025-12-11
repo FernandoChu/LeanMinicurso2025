@@ -1,0 +1,251 @@
+\documentclass{beamer}
+\usepackage{mathpartir}
+\usepackage[style=authoryear]{biblatex}
+\usepackage{stmaryrd}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{xcolor}
+\usepackage{multicol}
+\usepackage{quiver}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+\addbibresource{biblio.bib}
+\setbeamercolor{bibliography entry author}{fg=blue}
+\setbeamercolor{bibliography entry location}{fg=lightgray}
+\setbeamercolor{bibliography entry note}{fg=lightgray}
+
+\newcommand{\coerce}{\mathsf{coerce}}
+% \newcommand{\mode}{\mathbb M}
+\newcommand{\id}{\mathsf{id}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\op}{\mathsf{op}}
+\newcommand{\core}{\mathsf{core}}
+\newcommand{\loc}{\mathsf{loc}}
+\newcommand{\Cat}{\mathsf{Cat}}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\C}{\mathcal C}
+\newcommand{\gcs}[1]{\overset{\scriptscriptstyle #1}{.}}
+\newcommand{\isovar}{\overset{\circ}{:}}
+\newcommand{\covar}{\overset{\scriptscriptstyle  +}{:}}
+\newcommand{\contravar}{\overset{\scriptscriptstyle -}{:}}
+\newcommand{\nvar}{\overset{\scriptscriptstyle \times}{:}}
+\newcommand{\var}[1]{\overset{\scriptscriptstyle #1}{:}}
+\newcommand{\ctx}{\,\mathsf{ctx}}
+\newcommand{\gctx}{\,\mathsf{gctx}}
+\newcommand{\type}{\ \mathsf{type}}
+\newcommand{\ort}{\ \mathsf{ort}}
+\newcommand{\xort}[1]{\ \operatorname{#1-\mathsf{ort}}}
+\newcommand{\x}{\mathnormal{x}}
+\newcommand{\Id}{\mathsf{Id}}
+\newcommand{\refl}{\mathsf{refl}}
+\newcommand{\Tm}{\mathsf{Tm}}
+\newcommand{\cextp}[2]{#1.#2}
+\newcommand{\cextn}[2]{#1.#2}
+\newcommand{\ind}{\mathsf{ind}}
+\newcommand{\flip}{\mathsf{flip}\,}
+\newcommand{\unflip}{\mathsf{unflip}\,}
+\newcommand{\strip}{\mathsf{strip}\,}
+\newcommand{\unstrip}{\mathsf{strip}\,}
+\newcommand{\homset}{\mathsf{hom}\mathcal{S}\mathsf{et}}
+\newcommand{\defeq}{:\equiv}
+\newcommand{\tr}{\mathsf{tr}}
+\newcommand{\Ty}{\mathsf{Ty}}
+\newcommand{\Con}{\mathsf{Con}}
+\newcommand{\Ort}{\mathsf{Ort}}
+\newcommand{\OrtType}{\mathsf{OrtType}}
+\newcommand{\List}{\mathsf{List}}
+\newcommand{\dfunext}{\mathsf{funext}^\to}
+\newcommand{\funext}{\mathsf{funext}^=}
+\newcommand{\ext}[1]{\overset{\scriptscriptstyle #1}{.}}
+
+\usetikzlibrary{calc,decorations.pathmorphing,shapes}
+\newcounter{sarrow}
+\newcommand\xrsquigarrow[1]{%
+  \stepcounter{sarrow}%
+  \mathrel{
+    \begin{tikzpicture}[baseline= {( $ (current bounding box.south) + (0,-0.5ex) $ )}]
+      \node[inner sep=.5ex] (\thesarrow) {$\scriptstyle #1$};
+      \path[draw,<-,decorate,
+      decoration={zigzag,amplitude=0.7pt,segment length=1.2mm,pre=lineto,pre length=4pt}]
+      (\thesarrow.south east) -- (\thesarrow.south west);
+  \end{tikzpicture}}%
+}
+
+\input{beamertheme}
+
+% \setbeamercolor{block title}         {fg = gray,  bg = lightgray}
+% \setbeamercolor{block body}          {fg = white, bg = darkgray}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{oldproposition}{Proposition}
+\AtBeginEnvironment{oldproposition}{%
+  \setbeamercolor{block title}{use=example text,fg=gray,bg=lightgray!75!white}
+  \setbeamercolor{block body}{parent=normal text,use=block title example,bg=gray!75!white}
+  % \setbeamercolor{block body}{parent=normal text,use=block title example,bg=gray!10}
+}
+
+\title[]{Formalizando Matem\'aticas en Lean}
+
+\author{Fernando Chu}
+
+\date{Diciembre 2025 - IMCA}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}[plain]
+  \centering
+  \Huge \alert{?`Qu\'e es Lean?}
+\end{frame}
+
+\begin{frame}
+  \frametitle{?`Qu\'e es Lean?}
+  \Large
+  \only<1>{
+    Lean es un lenguaje de programaci\'on funcional y un asistente de pruebas de c\'odigo abierto.
+  }
+  \only<2>{
+    Lean es un lenguaje de programaci\'on funcional y un asistente de pruebas de \alert{c\'odigo abierto}.
+  }
+  \only<3>{
+    Lean es un \alert{lenguaje de programaci\'on funcional} y un asistente de pruebas de c\'odigo abierto.
+  }
+  % Mathematica, matlab son closed source
+  \only<4>{
+    Lean es un lenguaje de programaci\'on funcional y un \alert{asistente de pruebas} de c\'odigo abierto.
+  }
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge \alert{?`Por qu\'e Lean? \\ ?`Por qu\'e formalizar?}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Certeza de los resultados}
+  Recordatorio: Todos cometemos errores!
+  \\[1em]
+
+  Algunos ejemplos:
+  \begin{itemize}
+      \pause
+    \item La primera prueba del Teorema de Fermat de Wiles (1993) estaba equivocada.
+      \pause
+    \item La hip\'otesis de homotop\'ia fue demostrada por Kapranov y Voevodsky (1991). A\~nos despu\'es, Simpson encontr\'o un contraejemplo (1998)!
+      \pause
+    \item Scholze, escribe sobre su propio teorema (2020):
+      \begin{quote}
+        ...I think the theorem is of utmost foundational importance, so being 99.9\% sure is not enough.
+      \end{quote}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Entendimiento de los resultados}
+  Scholze ret\'o a la comunidad de Lean a que formalizara su teorema (2020), seis meses despu\'es el reto fue cumplido.
+  \'El escribe:
+  \\[1em]
+  \begin{quotation}
+    When I wrote the blog post half a year ago, I did not understand why the argument worked, (\dots) during the formalization, a significant amount of convex geometry had to be formalized (\dots) this made me realize that actually the key thing happening is a reduction from a non-convex problem over the reals to a convex problem over the integers.
+  \end{quotation}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Otras razones}
+  \begin{itemize}
+    \item Asistencia en las pruebas: \\ Ej., casos m\'ultiples, argumentos rutinarios.
+      \vspace{1em}
+    \item Asistencia en la ense\~nanza: \\ Ej., Tao formaliz\'o su libro de an\'alisis, hay cursos de primer a\~no en varias universidades.
+      \vspace{1em}
+    \item Colaboraci\'on de las matem\'aticas: \\ Ej., paralelizaci\'on del trabajo: ``Equational Theories Project'' (Tao, 2024) con 65 contribuidores! Buzzard y FLT, etc.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Otras razones}
+  \begin{itemize}
+    \item Incentiva buenas abstracciones: \\ Ej., Johan Commelin cre\'o una nueva estructura algebraica para demostrar el teorema de Scholze.
+      \vspace{1em}
+    \item Archivo abierto de las matem\'aticas: \\ Definiciones y pruebas ``del Libro''. Preservaci\'on de resultados a trav\'es de generaciones.
+      \vspace{1em}
+    \item Posiciones laborales: \\ Posiciones en academia e industria.
+      \vspace{1em}
+    \item (Especulativo) Un requisito en un futuro: \\Grandes matem\'aticos ya se est\'an adelantando, y formalizando sus resultados (Tao, Riehl, Scholze, etc).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge
+  \alert{Una raz\'on m\'as:}\\
+  !`Es divertido!
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge \alert{?`Preguntas?}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Mathlib}
+  No queremos definir todas las matem\'aticas desde 0.
+  \pause
+  \vspace{2em}
+
+  Queremos una librer\'ia con todas las matem\'aticas b\'asicas:
+
+  \centering
+  \pause
+  \Huge \alert{!`Mathlib!}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Mathlib}
+  Mathlib es la librer\'ia de matem\'aticas formalizadas m\'as grande del mundo.
+  \begin{itemize}
+    \item Desarrollada por m\'as de 100 contribuyentes
+    \item M\'as de 2 millones de l\'ineas de c\'odigo.
+    \item B\'asicamente toda la matem\'atica de nivel de pregrado ya est\'a formalizada.
+    \item Necesitamos m\'as contribuyentes!
+  \end{itemize}
+
+  \vspace{2em}
+  Los invito a unirse a la comunidad de Lean en Zulip: \url{https://leanprover.zulipchat.com/}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Plan (Tentativo)}
+  \begin{enumerate}
+    \item D\'ia 1:
+      \begin{itemize}
+        \item L\'ogica y T\'acticas b\'asicas
+        \item Sucesiones y T\'acticas adicionales
+      \end{itemize}
+    \item D\'ia 2:
+      \begin{itemize}
+        \item \'Algebra, estructuras y clases
+        \item Derivadas y coerciones
+      \end{itemize}
+    \item D\'ia 3:
+      \begin{itemize}
+        \item Tipos inductivos
+        \item Enteros, racionales y cocientes
+      \end{itemize}
+    \item D\'ia 4:
+      \begin{itemize}
+        \item Otros comentarios sobre formalizaci\'on
+        \item Mini proyecto
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Huge \alert{Formalizemos!} \\[3em]
+  \large
+  \url{https://tinyurl.com/leanimca}
+  \url{https://github.com/FernandoChu/LeanMinicurso2025}
+
+\end{frame}
+
+\end{document}

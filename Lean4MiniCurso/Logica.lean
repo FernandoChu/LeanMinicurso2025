@@ -144,8 +144,8 @@ Tácticas específicas: Cuando tienes `p ∧ q` en
 -/
 
 example (p q : Prop) : p ∧ q → q ∧ p := by
-  intro pq
-  obtain ⟨hp, hq⟩ := pq
+  intro hpq
+  obtain ⟨hp, hq⟩ := hpq
   constructor
   · exact hq
   · exact hp

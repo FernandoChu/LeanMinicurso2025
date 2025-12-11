@@ -1,0 +1,87 @@
+\useoutertheme[subsection = false, compress, footline = false]{miniframes}
+
+\usefonttheme[onlymath]{serif}
+
+\definecolor{red}      {HTML}{ee9999}
+\definecolor{green}    {HTML}{aaddaa}
+\definecolor{blue}     {HTML}{9999ee}
+\definecolor{yellow}   {HTML}{ddddaa}
+\definecolor{pink}     {HTML}{ddaadd}
+\definecolor{mizu}     {HTML}{aadddd}
+\definecolor{gray}     {HTML}{333333}
+\definecolor{lightgray}{HTML}{dddddd}
+\definecolor{darkgray} {HTML}{222222}
+
+\setbeamercolor{palette primary}     {fg = white, bg = gray}
+\setbeamercolor{palette secondary}   {fg = white, bg = lightgray}
+\setbeamercolor{palette tertiary}    {fg = white, bg = gray}
+\setbeamercolor{background canvas}   {fg = white, bg = gray}
+\setbeamercolor{title}               {fg = green, bg = gray}
+\setbeamercolor{frametitle}          {fg = green, bg = gray}
+\setbeamercolor{normal text}         {fg = white, bg = gray}
+\setbeamercolor{alerted text}        {fg = green, bg = gray}
+\setbeamercolor{block title}         {fg = gray,  bg = lightgray}
+\setbeamercolor{block body}          {fg = white, bg = darkgray}
+\setbeamercolor{block title example} {fg = gray,  bg = green}
+\setbeamercolor{block body  example} {fg = white, bg = green!33!black}
+\setbeamercolor{block title alerted} {fg = gray,  bg = red}
+\setbeamercolor{block body  alerted} {fg = white, bg = red!33!black}
+\setbeamercolor{qed symbol}          {fg = white, bg = gray}
+\setbeamercolor{enumerate item}      {fg = green}
+\setbeamercolor{enumerate subitem}   {fg = green}
+\setbeamercolor{enumerate subsubitem}{fg = green}
+\setbeamercolor{itemize   item}      {fg = green}
+\setbeamercolor{itemize   subitem}   {fg = green}
+\setbeamercolor{itemize   subsubitem}{fg = green}
+
+\setbeamerfont{title}      {series = \bfseries, size = \LARGE}
+\setbeamerfont{frametitle} {series = \bfseries, size = \Large}
+\setbeamerfont{block title}{series = \bfseries}
+
+\beamertemplatenavigationsymbolsempty
+\setbeamercovered{transparent = 12.5}
+
+\setbeamertemplate{title page}{
+  \centering
+  \vbox{}
+  \vskip3em
+  \usebeamertemplate{title}
+  \usebeamertemplate{author}
+  \usebeamertemplate{date}
+}
+
+\newenvironment{smallblock}
+{
+\begin{block}{\vspace{-10pt}}}
+  {
+\end{block}}
+
+% Select some frames to appear in the handout version
+\makeatletter
+\newif\ifOnBeamerModeTransition
+\newcommand{\slideselection}{1-}%
+\newenvironment{handoutframeselect}[1][1-]{%
+  \begingroup%
+  \mode<handout>{%
+    \gdef\beamer@currentmode{beamer}%
+    \OnBeamerModeTransitiontrue%
+  \renewcommand{\slideselection}{#1}}%
+}{%
+  \ifOnBeamerModeTransition%
+  \OnBeamerModeTransitionfalse%
+  \gdef\beamer@currentmode{handout}%
+  \fi%
+  \endgroup%
+}
+\makeatother
+
+% Don't index page
+\makeatletter
+\let\beamer@writeslidentry@miniframeson=\beamer@writeslidentry%
+\def\beamer@writeslidentry@miniframesoff{\expandafter\beamer@ifempty\expandafter{\beamer@framestartpage}{}{\clearpage\beamer@notesactions}}
+\newcommand*\miniframeson{\let\beamer@writeslidentry=\beamer@writeslidentry@miniframeson}
+\newcommand*\miniframesoff{\let\beamer@writeslidentry=\beamer@writeslidentry@miniframesoff}
+\makeatother
+
+\setbeamertemplate{itemize item}{\textbullet}
+\setbeamertemplate{itemize subitem}{\textopenbullet}
