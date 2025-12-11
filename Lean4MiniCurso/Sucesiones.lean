@@ -175,14 +175,13 @@ lemma ConvergesTo.add {a b : ℕ → ℝ} {x y : ℝ}
 /-- La función 1/n converge hacia 0. -/
 example : Lim (fun n ↦ 1 / n) ⇝ 0 := by
   intro ε hε
-  use ⌈1 / ε⌉₊
+  use ⌈ε⁻¹⌉₊
   intro n hn
-  simp only [one_div, zero_sub, abs_neg]
+  simp
   have : n ≥ ε⁻¹ := by
-    rw [inv_eq_one_div]
-    exact Nat.ceil_le.mp hn
-  rw [abs_inv]
-  simp only [Nat.abs_cast, ge_iff_le]
+    calc
+      (n : ℝ) ≥ ⌈ε⁻¹⌉₊ := by exact Nat.cast_le.mpr hn
+            _ ≥ ε⁻¹ := by exact Nat.le_ceil ε⁻¹
   exact inv_le_of_inv_le₀ hε this
 
 
