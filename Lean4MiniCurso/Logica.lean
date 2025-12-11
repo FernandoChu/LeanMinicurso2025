@@ -172,9 +172,9 @@ example (p q : Prop) : p ∨ q → q ∨ p := by
   intro pq
   obtain hp | hq := pq
   · right
-    assumption
+    exact hp
   · left
-    assumption
+    exact hq
 
 /-
 Observación: una prueba de `p ∨ q` es una prueba de `p` o una prueba de `q`.
