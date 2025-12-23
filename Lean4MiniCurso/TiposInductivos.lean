@@ -36,7 +36,8 @@ base, es decir no están definidas en términos de otros conceptos.
 
 Su uso es más cercano a la intuición matemática: una función es una "regla".
 -/
-def identity (A : Type) : A → A := fun x ↦ x
+def identity (A : Type) : A → A :=
+  fun x ↦ x
 
 /- La aplicación de una función es entonces "aplicar la regla". -/
 #eval identity ℕ 2
@@ -70,7 +71,8 @@ def ind (P : Nat → Prop) (h0 : P .zero) (hd : ∀ n : Nat, P n → P (.succ n)
 
 #eval plus (.succ .zero) .zero
 
-example (n : Nat) : plus n .zero = n := by
+example (n : Nat) :
+    plus n .zero = n := by
   induction n with
   | zero => rw [plus]
   | succ n h =>
